@@ -3,6 +3,8 @@
 
 AM_CPPFLAGS = -I@top_srcdir@/include
 
-bin_PROGRAMS = anaserv
+bin_PROGRAMS = anaserv hashfile
 
 anaserv_SOURCES = anaserv.cxx
+
+hashfile_SOURCES = hashfile.cxx

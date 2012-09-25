@@ -56,10 +56,16 @@ bool AnaServerClass::fillTable( const string& fileName ){
   while ( getline( is, line ) ) {
     vector<string> v;
     int num = split_at( line, v , "~" );
-    if ( num != 2 ){
-      cerr << "some strange line in '" << fileName << "' :" << endl
+    if ( num < 2 ){
+      cerr << "some very strange line in '" << fileName << "' :" << endl
 	   << line << endl;
       return false;
+    }
+    if ( num > 2 ){
+      //      cerr << "strange line '" << line << "'" << endl;
+      for ( size_t i=2; i < num; ++i ){
+	v[1] += "~" + v[i];
+      }
     }
     long int hash;
     if ( !Timbl::stringTo( v[0], hash ) ){
