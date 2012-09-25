@@ -6,7 +6,7 @@ Nijmegen
 
 anaserv is distributed under the GNU Public Licence (see the file COPYING).
 
-To be able to succesfully build tscan from the tarball, you need the
+To be able to succesfully build anaserv from the tarball, you need the
 following pakages:
 - autotools
 - autoconf-archive
