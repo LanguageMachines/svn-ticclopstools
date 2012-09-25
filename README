@@ -1,0 +1,15 @@
+anaserv 0.1 (c) TiCC/ 1998 - 2012
+
+Tilburg centre for Cognition and Communication, Tilburg University.
+Utrecht
+Nijmegen
+
+anaserv is distributed under the GNU Public Licence (see the file COPYING).
+
+To be able to succesfully build tscan from the tarball, you need the
+following pakages:
+- autotools
+- autoconf-archive
+- ticcutils
+- timbl
+- timblserver
