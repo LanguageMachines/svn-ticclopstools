@@ -195,7 +195,8 @@ anaserv.o: anaserv.cxx /usr/include/c++/4.6/csignal \
  /home/sloot/usr/local/include/ticcutils/LogBuffer.h \
  /usr/include/c++/4.6/ctime /usr/include/c++/4.6/cstring \
  /usr/include/string.h /usr/include/x86_64-linux-gnu/bits/string3.h \
- /usr/include/c++/4.6/typeinfo /usr/include/c++/4.6/iomanip
+ /usr/include/c++/4.6/typeinfo /usr/include/c++/4.6/iomanip \
+ ../include/ticclops/Hasher.h
 
 /usr/include/c++/4.6/csignal:
 
@@ -700,3 +701,5 @@ anaserv.o: anaserv.cxx /usr/include/c++/4.6/csignal \
 /usr/include/c++/4.6/typeinfo:
 
 /usr/include/c++/4.6/iomanip:
+
+../include/ticclops/Hasher.h:

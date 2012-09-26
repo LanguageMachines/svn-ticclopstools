@@ -1,6 +1,6 @@
 #  $Id$
 #  $URL$
 
-pkginclude_HEADERS = 
+pkginclude_HEADERS = Hasher.h
 
 

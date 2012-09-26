@@ -32,7 +32,6 @@
 #include "config.h"
 #include "timblserver/TimblServerAPI.h"
 #include "timblserver/FdStream.h"
-#include "ticcutils/StringOps.h"
 #include "ticclops/AnaServer.h"
 
 using namespace std;
@@ -44,45 +43,9 @@ using namespace TiCC;
 #define LOG cerr
 
 inline void usage(){
-  cerr << "usage:  anaserv [options]" << endl;
+  cerr << "usage:  anaserv -S port [-f hashfile]" << endl;
+  cerr << " or     anaserv -S port [-l lexiconfile]" << endl;
   exit( EXIT_SUCCESS );
-}
-
-bool AnaServerClass::fillTable( const string& fileName ){
-  ifstream is( fileName.c_str() );
-  if ( !is )
-    return false;
-  string line;
-  while ( getline( is, line ) ) {
-    vector<string> v;
-    int num = split_at( line, v , "~" );
-    if ( num < 2 ){
-      cerr << "some very strange line in '" << fileName << "' :" << endl
-	   << line << endl;
-      return false;
-    }
-    if ( num > 2 ){
-      //      cerr << "strange line '" << line << "'" << endl;
-      for ( size_t i=2; i < num; ++i ){
-	v[1] += "~" + v[i];
-      }
-    }
-    long int hash;
-    if ( !Timbl::stringTo( v[0], hash ) ){
-      cerr << "illegal hash " << v[0] << "in " << line << endl;
-      return false;
-    }
-    hashMap[hash] = v[1];
-  }
-  return true;
-}
-
-string AnaServerClass::lookup( long int hash ) const {
-  map<long int, string>::const_iterator it = hashMap.find( hash );
-  if ( it == hashMap.end() )
-    return "#";
-  else
-    return it->second;
 }
 
 AnaServerClass::AnaServerClass( Timbl::TimblOpts& opts ):
@@ -121,33 +84,42 @@ AnaServerClass::AnaServerClass( Timbl::TimblOpts& opts ):
       maxConn = 20;
   }
   if ( opts.Find( "f", val, mood ) ){
-    string fileName = val;
-    cerr << "Anagram Server " << VERSION << endl;
-    cerr << "based on " << TimblServer::VersionName() << endl;
-    doDaemon = true;
-    dbLevel = LogNormal;
-    if ( opts.Find( "pidfile", val ) ) {
-      pidFile = val;
-      opts.Delete( "pidfile" );
+    ifstream is( val.c_str() );
+    if ( !is ){
+      cerr << "couldn't open hashes file: " << val << endl;
+      exit( EXIT_FAILURE );
     }
-    if ( opts.Find( "logfile", val ) ) {
-      logFile = val;
-      opts.Delete( "logfile" );
+    hash.fill( is );    
+  }
+  else if ( opts.Find( "l", val, mood ) ){
+    ifstream is( val.c_str() );
+    if ( !is ){
+      cerr << "couldn't open lexicon file: " << val << endl;
+      exit( EXIT_FAILURE );
     }
-    if ( opts.Find( "daemonize", val ) ) {
-      doDaemon = ( val != "no" && val != "NO" && val != "false" && val != "FALSE" );
-      opts.Delete( "daemonize" );
-    }
-    if ( !fillTable( fileName ) ){
-      cerr << "hmm, unable to read data from '" << fileName << endl;
-    }
-    else
-      RunServer();
+    hash.hash_file( is );
   }
   else {
-    cerr << "Missing value for option -f" << endl;
+    cerr << "Missing option -l or -f " << endl;
     usage();
   }
+  cerr << "Anagram Server " << VERSION << endl;
+  cerr << "based on " << TimblServer::VersionName() << endl;
+  doDaemon = true;
+  dbLevel = LogNormal;
+  if ( opts.Find( "pidfile", val ) ) {
+    pidFile = val;
+    opts.Delete( "pidfile" );
+  }
+  if ( opts.Find( "logfile", val ) ) {
+    logFile = val;
+    opts.Delete( "logfile" );
+  }
+  if ( opts.Find( "daemonize", val ) ) {
+    doDaemon = ( val != "no" && val != "NO" && val != "false" && val != "FALSE" );
+    opts.Delete( "daemonize" );
+  }
+  RunServer();
 }
 
 AnaServerClass::~AnaServerClass(){

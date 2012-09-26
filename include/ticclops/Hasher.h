@@ -1,5 +1,3 @@
-#ifndef ANASERVER_SERVER_H
-#define ANASERVER_SERVER_H
 /*
   $Id$
   $URL$
@@ -27,27 +25,20 @@
       
 */
 
-#include "ticcutils/LogStream.h"
-#include "ticclops/Hasher.h"
+#ifndef TIICLOPS_HASHER_H
+#define TIICLOPS_HASHER_H
 
-class AnaServerClass {
+typedef unsigned long long BigInt;
+
+class Hasher {
  public:
-  AnaServerClass( Timbl::TimblOpts& opts );
-  ~AnaServerClass();
-  void Start( Timbl::TimblOpts& Opts );
-  void exec( const std::string&, std::ostream& );
-  TiCC::LogStream cur_log;
-  std::string lookup( BigInt h ) const { return hash.lookup( h ); };
+  BigInt hash( const std::string& );
+  void hash_file( std::istream& );
+  void output( std::ostream& );
+  bool fill( std::istream& is );
+  std::string lookup( BigInt h ) const;
  private:
-  bool RunServer();
-  std::string configFile;
-  std::string pidFile;
-  std::string logFile;
-  bool doDaemon;
-  int serverPort;
-  int maxConn;
-  LogLevel dbLevel;
-  Hasher hash;
+  std::map<BigInt,std::string> hash_map;
 };
 
 #endif
