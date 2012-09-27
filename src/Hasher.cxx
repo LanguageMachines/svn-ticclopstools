@@ -67,7 +67,7 @@ bool Hasher::fill( istream& is ){
 	v[1] += "~" + v[i];
       }
     }
-    long int hash;
+    BigInt hash;
     if ( !Timbl::stringTo( v[0], hash ) ){
       cerr << "illegal hash " << v[0] << "in " << line << endl;
       return false;

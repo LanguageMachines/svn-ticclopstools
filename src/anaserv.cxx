@@ -151,7 +151,7 @@ void AfterDaemonFun( int Signal ){
 }
 
 void AnaServerClass::exec( const string& line, ostream& os ){
-  long int hash;
+  BigInt hash;
   if ( !Timbl::stringTo( line, hash ) ){
     os << "ERROR: invalid hash. Must be numeric!" << endl;
   }
