@@ -41,8 +41,9 @@ BigInt Hasher::hash( const string& word ){
   if ( word.empty() )
     return 0;
   for( string::size_type i=0; i < word.length(); ++i ){
-    int n = word[i];
-    hash += n * n * n * n * n;
+    BigInt n = word[i];
+    BigInt n5 = n * n * n * n * n;
+    hash += n5;
   }
   map<BigInt,string>::iterator it = hash_map.find( hash );
   if ( it == hash_map.end() ){
