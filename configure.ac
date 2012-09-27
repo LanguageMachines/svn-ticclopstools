@@ -40,6 +40,10 @@ if test "x$PKG_CONFIG_PATH" = x; then
 fi
 PKG_PROG_PKG_CONFIG
 
+AX_ICU_CHECK( [3.6],
+	      [CXXFLAGS="$CXXFLAGS $ICU_CPPSEARCHPATH"
+	      LIBS="$ICU_LIBPATH $ICU_LIBS $ICU_IOLIBS $LIBS"],
+	      [AC_MSG_FAILURE( "No ICU development environment found. Please check if libicu-dev or the like is installed" )] )
 
 AC_ARG_WITH(timbl,
        [  --with-timbl=DIR       use timbl installed in <DIR>; 

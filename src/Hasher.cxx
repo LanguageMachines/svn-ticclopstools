@@ -30,16 +30,22 @@
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
+#include "unicode/unistr.h"
 #include "ticcutils/StringOps.h"
 #include "timbl/TimblAPI.h"
 #include "ticclops/Hasher.h"
 
 using namespace std;
 
-BigInt Hasher::hash( const string& word ){
+UnicodeString UTF8ToUnicode( const string& s ){
+  return UnicodeString( s.c_str(), s.length(), "UTF-8" );
+}
+
+BigInt Hasher::hash( const string& utf8word ){
   BigInt hash = 0;
-  if ( word.empty() )
+  if ( utf8word.empty() )
     return 0;
+  UnicodeString word = UTF8ToUnicode( utf8word );
   for( string::size_type i=0; i < word.length(); ++i ){
     BigInt n = word[i];
     BigInt n5 = n * n * n * n * n;
@@ -47,10 +53,10 @@ BigInt Hasher::hash( const string& word ){
   }
   map<BigInt,string>::iterator it = hash_map.find( hash );
   if ( it == hash_map.end() ){
-    hash_map[hash] = word;
+    hash_map[hash] = utf8word;
   }
   else {
-    hash_map[hash] += "#" + word;
+    hash_map[hash] += "#" + utf8word;
   }
 }
 
