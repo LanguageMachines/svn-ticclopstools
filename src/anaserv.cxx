@@ -32,6 +32,7 @@
 #include "config.h"
 #include "timblserver/TimblServerAPI.h"
 #include "timblserver/FdStream.h"
+#include "ticcutils/StringOps.h"
 #include "ticclops/AnaServer.h"
 
 using namespace std;
