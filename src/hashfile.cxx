@@ -35,7 +35,7 @@
 using namespace std;
 
 void usage(){
-  cerr << "usage: hasfile input [output]" << endl;
+  cerr << "usage: hashfile input [output]" << endl;
   exit( EXIT_SUCCESS );
 }
 
