@@ -68,7 +68,7 @@ AnaServerClass::AnaServerClass( Timbl::TimblOpts& opts ):
     opts.Delete( 'D' );
   }
   if ( opts.Find( 'S', val, mood ) ){
-    if ( !Timbl::stringTo( val, serverPort ) ){
+    if ( !TiCC::stringTo( val, serverPort ) ){
       cerr << "illegal value for option -S" << endl;
       usage();
     }
@@ -77,7 +77,7 @@ AnaServerClass::AnaServerClass( Timbl::TimblOpts& opts ):
     cerr << "Missing value for option -S" << endl;
   }
   if ( !opts.Find( 'm', val, mood ) ){
-    if ( !Timbl::stringTo( val, maxConn ) ){
+    if ( !TiCC::stringTo( val, maxConn ) ){
       cerr << "illegal value for option -m" << endl;
       usage();
     }
@@ -153,7 +153,7 @@ void AfterDaemonFun( int Signal ){
 
 void AnaServerClass::exec( const string& line, ostream& os ){
   BigInt hash;
-  if ( !Timbl::stringTo( line, hash ) ){
+  if ( !TiCC::stringTo( line, hash ) ){
     os << "ERROR: invalid hash. Must be numeric!" << endl;
   }
   else {
@@ -284,7 +284,7 @@ bool AnaServerClass::RunServer(){
       << endl;
   
   Sockets::ServerSocket server;
-  string portString = Timbl::toString<int>(serverPort);
+  string portString = TiCC::toString<int>(serverPort);
   if ( !server.connect( portString ) ){
     LOG << "Failed to start Server: " << server.getMessage() << endl;
     exit(EXIT_FAILURE);
