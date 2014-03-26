@@ -3,7 +3,7 @@
   $URL$
 
   Copyright (c) 1998 - 2013
- 
+
   This file is part of ticclopstools
 
   ticclopstools is free software; you can redistribute it and/or modify
@@ -20,9 +20,9 @@
   along with this program; if not, see <http://www.gnu.org/licenses/>.
 
   For questions and suggestions, see:
-      
+
   or send mail to:
-      
+
 */
 
 #include <csignal>
@@ -30,8 +30,9 @@
 #include <string>
 #include <map>
 #include "config.h"
-#include "timblserver/TimblServerAPI.h"
 #include "timblserver/FdStream.h"
+#include "timblserver/ServerBase.h"
+#include "timbl/TimblAPI.h"
 #include "ticcutils/StringOps.h"
 #include "ticclops/AnaServer.h"
 
@@ -90,7 +91,7 @@ AnaServerClass::AnaServerClass( Timbl::TimblOpts& opts ):
       cerr << "couldn't open hashes file: " << val << endl;
       exit( EXIT_FAILURE );
     }
-    hash.fill( is );    
+    hash.fill( is );
   }
   else if ( opts.Find( "l", val, mood ) ){
     ifstream is( val.c_str() );
@@ -137,7 +138,7 @@ void StopServerFun( int Signal ){
     exit(EXIT_FAILURE);
   }
   signal( SIGINT, StopServerFun );
-}  
+}
 
 void BrokenPipeChildFun( int Signal ){
   if ( Signal == SIGPIPE ){
@@ -190,7 +191,7 @@ void *runChild( void *arg ){
     // report connection to the server terminal
     //
     SLOG << "Thread " << pthread_self() << ", Socket number = "
-	 << Sock->getSockId() << ", started at: " 
+	 << Sock->getSockId() << ", started at: "
 	 << asctime( localtime( &timebefore) );
     signal( SIGPIPE, BrokenPipeChildFun );
     fdistream is( Sock->getSockId() );
@@ -203,9 +204,9 @@ void *runChild( void *arg ){
       theServer->exec( line, os );
     }
     time( &timeafter );
-    SLOG << "Thread " << pthread_self() << ", terminated at: " 
+    SLOG << "Thread " << pthread_self() << ", terminated at: "
 	 << asctime( localtime( &timeafter ) );
-    SLOG << "Total time used in this thread: " << timeafter - timebefore 
+    SLOG << "Total time used in this thread: " << timeafter - timebefore
 	 << " sec, " << nw << " words processed " << endl;
   }
   // exit this thread
@@ -228,7 +229,7 @@ bool AnaServerClass::RunServer(){
       cerr << "switching logging to file " << logFile << endl;
       cur_log.associate( *tmp );
       cur_log.message( "T-Scan:" );
-      SLOG << "Started logging " << endl;	
+      SLOG << "Started logging " << endl;
     }
     else {
       cerr << "unable to create logfile: " << logFile << endl;
@@ -263,7 +264,7 @@ bool AnaServerClass::RunServer(){
       pid_file << pid << endl;
     }
   }
-  
+
   // set the attributes
   pthread_attr_t attr;
   if ( pthread_attr_init(&attr) ||
@@ -274,15 +275,15 @@ bool AnaServerClass::RunServer(){
   //
   // setup Signal handling to abort the server.
   signal( SIGINT, StopServerFun );
-  
+
   pthread_t chld_thr;
-  
+
   // start up server
-  // 
+  //
   LOG << "Started Server on port: " << serverPort << endl
       << "Maximum # of simultaneous connections: " << maxConn
       << endl;
-  
+
   Sockets::ServerSocket server;
   string portString = TiCC::toString<int>(serverPort);
   if ( !server.connect( portString ) ){
@@ -293,7 +294,7 @@ bool AnaServerClass::RunServer(){
     LOG << "Server: listen failed " << strerror( errno ) << endl;
     exit(EXIT_FAILURE);
   };
-  
+
   while(true){ // waiting for connections loop
     Sockets::ServerSocket *newSock = new Sockets::ServerSocket();
     if ( !server.accept( *newSock ) ){
@@ -306,8 +307,8 @@ bool AnaServerClass::RunServer(){
     }
     LOG << "Accepting Connection " << newSock->getSockId()
 	<< " from remote host: " << newSock->getClientName() << endl;
-    
-    // create a new thread to process the incoming request 
+
+    // create a new thread to process the incoming request
     // (The thread will terminate itself when done processing
     // and release its socket handle)
     //
@@ -316,10 +317,10 @@ bool AnaServerClass::RunServer(){
     args->maxC = maxConn;
     args->socket = newSock;
     pthread_create( &chld_thr, &attr, runChild, (void *)args );
-    // the server is now free to accept another socket request 
+    // the server is now free to accept another socket request
   }
 }
-  
+
 int main(int argc, char *argv[]) {
   Timbl::TimblOpts opts( argc, argv );
   string val;
