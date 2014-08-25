@@ -3,7 +3,7 @@
   $URL$
 
   Copyright (c) 1998 - 2013
- 
+
   This file is part of ticclopstools
 
   ticclopstools is free software; you can redistribute it and/or modify
@@ -20,9 +20,9 @@
   along with this program; if not, see <http://www.gnu.org/licenses/>.
 
   For questions and suggestions, see:
-      
+
   or send mail to:
-      
+
 */
 
 #include <vector>
@@ -41,12 +41,12 @@ UnicodeString UTF8ToUnicode( const string& s ){
   return UnicodeString( s.c_str(), s.length(), "UTF-8" );
 }
 
-BigInt Hasher::hash( const string& utf8word ){
+BigInt Hasher::add_hash( const string& utf8word ){
   BigInt hash = 0;
   if ( utf8word.empty() )
     return 0;
   UnicodeString word = UTF8ToUnicode( utf8word );
-  for( string::size_type i=0; i < word.length(); ++i ){
+  for( int i=0; i < word.length(); ++i ){
     BigInt n = word[i];
     BigInt n5 = n * n * n * n * n;
     hash += n5;
@@ -58,13 +58,14 @@ BigInt Hasher::hash( const string& utf8word ){
   else {
     hash_map[hash] += "#" + utf8word;
   }
+  return hash;
 }
 
 bool Hasher::fill( istream& is ){
   string line;
   while ( getline( is, line ) ) {
     vector<string> v;
-    int num = TiCC::split_at( line, v , "~" );
+    size_t num = TiCC::split_at( line, v , "~" );
     if ( num < 2 ){
       cerr << "encountered a very strange line '" << line << "'" << endl;
       return false;
@@ -88,7 +89,7 @@ bool Hasher::fill( istream& is ){
 void Hasher::hash_file( istream& is ){
   string word;
   while ( getline( is, word ) ){
-    hash( word );
+    add_hash( word );
   }
 }
 

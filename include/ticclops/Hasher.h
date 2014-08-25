@@ -3,7 +3,7 @@
   $URL$
 
   Copyright (c) 1998 - 2014
- 
+
   This file is part of ticclopstools
 
   ticclopstools is free software; you can redistribute it and/or modify
@@ -20,9 +20,9 @@
   along with this program; if not, see <http://www.gnu.org/licenses/>.
 
   For questions and suggestions, see:
-      
+
   or send mail to:
-      
+
 */
 
 #ifndef TIICLOPS_HASHER_H
@@ -32,7 +32,7 @@ typedef unsigned long long BigInt;
 
 class Hasher {
  public:
-  BigInt hash( const std::string& );
+  BigInt add_hash( const std::string& );
   void hash_file( std::istream& );
   void output( std::ostream& );
   bool fill( std::istream& is );
