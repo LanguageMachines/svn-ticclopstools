@@ -30,8 +30,8 @@
 #include <string>
 #include <map>
 #include "config.h"
-#include "timblserver/FdStream.h"
-#include "timblserver/ServerBase.h"
+#include "ticcutils/FdStream.h"
+#include "ticcutils/ServerBase.h"
 #include "timbl/TimblAPI.h"
 #include "ticcutils/StringOps.h"
 #include "ticclops/AnaServer.h"
@@ -336,4 +336,3 @@ int main(int argc, char *argv[]) {
   AnaServerClass server( opts );
   exit(EXIT_SUCCESS);
 }
-
